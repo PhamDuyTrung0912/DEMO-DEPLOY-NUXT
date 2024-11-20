@@ -4,9 +4,10 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "0.0.0.0:3000:3000"
+      - "3000:3000"
     restart: always
     volumes:
       - .:/app
     environment:
       NODE_ENV: production
+    command: npm run start
