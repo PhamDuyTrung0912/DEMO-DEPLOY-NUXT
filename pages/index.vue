@@ -3,7 +3,8 @@
     <h1>Welcome to Nuxt SSR Demo!</h1>
     <p>Server-side rendering in action.</p>
     <p v-if="isClient">Current time: {{ currentTime }}</p>
-    <p>API Response: {{ apiResponse }}</p>
+    <p>API Response: {{ data }}</p>
+    <p>API Response: {{ data }}</p>
   </div>
 </template>
 
@@ -12,8 +13,16 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useHead } from "@vueuse/head";
 
+
+// Fetch API data with SSR support
+const { data, error } = useAsyncData("apiResponse", async () => {
+  const response = await axios.get(
+    "https://api.nationalize.io/?name=nathaniel"
+  );
+  return response.data;
+});
+
 const currentTime = ref("");
-const apiResponse = ref("");
 const isClient = ref(false);
 
 useHead({
@@ -31,16 +40,5 @@ useHead({
   ],
 });
 
-onMounted(async () => {
-  isClient.value = true;
-  currentTime.value = new Date().toLocaleString();
-  try {
-    const response = await axios.get(
-      "https://api.nationalize.io/?name=nathaniel"
-    );
-    apiResponse.value = response.data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-});
+
 </script>
